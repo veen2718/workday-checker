@@ -1,0 +1,12 @@
+.rsyncignore
+gradeData.json
+logs.json
+pastOldGradeData.json
+popup.html
+state.json
+workdayChecker.code-workspace
+wdCheck.sh
+constants.json
+.venv/
+__pycache__/
+temp.txt
