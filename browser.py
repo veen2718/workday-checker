@@ -75,7 +75,7 @@ async def load_cookies(browser: Browser, playwright: PlaywrightContextManager) -
     return page, context
     
 
-async def initialize_workday(page: Page, context: Context, browser: Browser) -> State:
+async def initialize_workday(page: Page, context: Context, browser: Browser) -> None:
     """
     starts up workday
     logs in if necessary
@@ -117,7 +117,8 @@ async def initialize_workday(page: Page, context: Context, browser: Browser) -> 
         print("'Student' button detected - already logged in")
         time.sleep(0.2)
         
-    # elif text_task in done:
+    elif text_task in done:
+        return None
     #     return State.BAD_LOAD
     #     time.sleep(500)
     #     await browser.close()
