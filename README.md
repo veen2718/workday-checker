@@ -19,7 +19,7 @@ Open the newly created `constants.json` and you should find two lines:
 "Workday-Password":"<YOUR-PASSWORD>",
 ```
 Replace `<YOUR-USERNAME>` and `<YOUR-PASSWORD>` with your workday username and password respectively. 
-It will be stored in plain-text which is not exactly secure. 
+It will be stored in **plain-text** which is not secure at all
 
 ###### Notification
 This uses Pushbullet to send notifications

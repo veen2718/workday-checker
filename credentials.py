@@ -3,7 +3,7 @@ import json
 with open("constants.json","r") as f:
     constants = json.load(f)
 
-wdUser = constants.get("Workday-Username")
-wdPw = constants.get("Workday-Password")
-apikey = constants.get("Pushbullet-API-Key")
-sessionName = constants.get("SessionName")
+WD_USER = constants.get("Workday-Username")
+WD_PW = constants.get("Workday-Password")
+API_KEY = constants.get("Pushbullet-API-Key")
+SESSION_NAME = constants.get("SessionName")

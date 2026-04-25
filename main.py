@@ -15,6 +15,9 @@ if __name__ == "__main__":
         elif command == "last":
             last()
             quit()
+        elif command == "clear":
+            clear_cookies()
+            quit()
         if doHead:
             quit()
     nfMsg = asyncio.run(

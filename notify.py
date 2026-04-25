@@ -1,12 +1,12 @@
 
 from pushbullet import Pushbullet
-from credentials import apikey
+from credentials import API_KEY
 
 
-pb = Pushbullet(apikey)
+pb = Pushbullet(API_KEY)
 
 def sendNotification(title,content):
-    if apikey:
+    if API_KEY:
         push = pb.push_note(title,content)
     else:
         print("apikey not detected")
