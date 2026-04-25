@@ -1,41 +1,55 @@
 import json
 from datetime import datetime
 
+from wd_types import GradeData
 
-def parse_grade_table(t,t0):
-    gradedCount = 0
-    gradedCourses = []
-    changedCount = 0
-    changedCourses = []
-    newGrades = []
-    for i,tr in enumerate(t):
+
+def parse_grade_table(all_rows: GradeData, old_rows: GradeData) -> dict:
+
+    graded_count = 0
+    graded_courses = []
+    changed_count = 0
+    changed_courses = []
+    new_grades = []
+
+    for i,tr in enumerate(all_rows):
         letterGrade = tr[3]
         percentageGrade = tr[4]
+
+        # if there is a value in the letter or % grade
         if letterGrade or percentageGrade:
-            if t0: 
-                trOld = t0[i]
-                if not (trOld[3] or trOld[4]):
-                    changedCount += 1
-                    changedCourses.append(trOld[0])
-                    newGrades.append(f"{tr[3]} {tr[4]}")
+            if old_rows: 
+                old_row = old_rows[i]
+
+                # if the same value in previous data was blank
+                if not (old_row[3] or old_row[4]):
+                    changed_count += 1
+                    changed_courses.append(old_row[0])
+                    new_grades.append(f"{tr[3]} {tr[4]}")
+
+                # if the grade change has already been recorded; i.e. not a new change
                 else:
-                    gradedCount += 1
-                    gradedCourses.append(tr[0])
+                    graded_count += 1
+                    graded_courses.append(tr[0])
             else:
                 print("no previous data saved")
-                gradedCount += 1
-                gradedCourses.append(tr[0])
+                graded_count += 1
+                graded_courses.append(tr[0])
     
     return {
-        "gradedCount":gradedCount,
-        "changedCount":changedCount,
-        "gradedCourses":gradedCourses,
-        "changedCourses":changedCourses,
-        "newGrades":newGrades,
+        "gradedCount":graded_count,
+        "changedCount":changed_count,
+        "gradedCourses":graded_courses,
+        "changedCourses":changed_courses,
+        "newGrades":new_grades,
     }
 
 
-def log(msg):
+def log(msg: list|str) -> None:
+    """
+    logs msg
+    """
+
     with open("logs.json","r") as f:
         logs = json.load(f)
     
@@ -48,7 +62,10 @@ def log(msg):
     with open("logs.json","w") as f:
         json.dump(logs,f,indent=4)
 
-def timeFmt(t):
+def time_fmt(t: str) -> str:
+    """
+    reformats t into HH:MM mm-dd
+    """
     return datetime.fromisoformat(t).strftime("%H:%M %m-%d")
 
 def last(n=5):
@@ -67,23 +84,6 @@ def last(n=5):
     else:
         display_last_with_no_changes(n)
 
-    #     print("RECENT CHANGE:")
-    #     for l in [l0 for l0 in logsRecent if l0 not in logsRecentNone]:
-    #         print(f"'{l.get("message")}' at {timeFmt(l.get('time'))}")
-    #     print("\nOlder Changes:")
-    # else:
-    #     print("No recent changes. Last Checks:")
-
-    # for l in logsRecent:
-    #     print(f" - {timeFmt(l.get('time'))}")
-
-    # if logsRecent == logsRecentNone:    
-    #     print("\nLast Changes at:")
-    
-
-    # for l in logsOldChanges:
-    #     print(f"'{l.get('message')}' at {timeFmt(l.get('time'))}")
-    
 
 def display_last_with_changes(n: int = 5) -> None:
     """
@@ -136,7 +136,7 @@ def display_log(log_data: dict) -> str:
     """
     returns the str for the given log
     """
-    dt_str = timeFmt(log_data.get('time'))
+    dt_str = time_fmt(log_data.get('time'))
     msg = log_data.get('message')
     return f"{dt_str}: {msg}"
 

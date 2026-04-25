@@ -21,7 +21,7 @@ if __name__ == "__main__":
         if doHead:
             quit()
     nfMsg = asyncio.run(
-        checkWorkday(doHead)
+        check_workday(doHead)
         )
     if nfMsg:
         sendNotification(*nfMsg)

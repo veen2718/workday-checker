@@ -8,7 +8,7 @@ from typing import Optional
 
 from tableParse import *
 from credentials import WD_USER, WD_PW, SESSION_NAME
-from wd_types import Context, Playwright, State, GradeData
+from wd_types import Context, Playwright, GradeData
 
 
 async def end(browser, context):
@@ -104,14 +104,11 @@ async def initialize_workday(page: Page, context: Context, browser: Browser) -> 
     done, pending = await asyncio.wait(
         {pw_task, stu_task, text_task},
         return_when=asyncio.FIRST_COMPLETED,
-        timeout=8_000_000
+        timeout=8_000
     )
 
     for task in pending:
         task.cancel()
-
-
-    state: Optional[State] = None
     
     if pw_task in done:
         needsLogin = True
@@ -119,16 +116,19 @@ async def initialize_workday(page: Page, context: Context, browser: Browser) -> 
         needsLogin = False
         print("'Student' button detected - already logged in")
         time.sleep(0.2)
-    elif text_task in done:
-        return State.BAD_LOAD
-        time.sleep(500)
-        await browser.close()
-        clear_cookies()
-        quit()
+        
+    # elif text_task in done:
+    #     return State.BAD_LOAD
+    #     time.sleep(500)
+    #     await browser.close()
+    #     clear_cookies()
+    #     quit()
 
     if needsLogin:
         await loginTo(page, context)
-    return State.GOOD
+    
+    # return State.GOOD
+    return None
 
 
 
@@ -142,7 +142,7 @@ async def bad_page_loading(page: Page):
     """
     await page.get_by_role("button", name="Profile").click()
     time.sleep(0.2)
-    # await page.get_by_role("button", name="View Profile").click()
+    
     # Click View Profile
     await page.locator('[data-automation-id="hammy_profile_link"]').click()
 
@@ -152,7 +152,6 @@ async def load_grade_page(page: Page):
     loads the grade page 
     ASSUMES workday has been initialized
     """
-
 
     # navigating to academics page
     stu_btn_locator = page.get_by_role("button", name="Student")
@@ -218,40 +217,7 @@ async def scrape_table(page: Page) -> list[list[str]]:
     
     return all_rows
 
-
-async def checkWorkday(do_head):
-    async with async_playwright() as playwright:
-        
-        browser = await get_browser(do_head,playwright)
-        page, context = await load_cookies(browser, playwright)
-
-        state = await initialize_workday(page, context, browser)
-        # if state == State.BAD_LOAD:
-        #     await bad_page_loading(page)
-        
-        await load_grade_page(page)
-
-
-        #Table Parsing stuff:
-        
-        # print("Data")
-        # [print(x) for x in allRows]
-
-        all_rows = await scrape_table(page)
-
-        with open("gradeData.json","r") as f:
-            old_grade_data = json.load(f)
-        
-        # print("\n\n\n\n\n\n\n\n\n\n")
-
-        nf_msg = save_grade_data(old_grade_data, all_rows)
-
-
-        await end(browser, context)
-        return nf_msg
-
-
-def save_grade_data(old_grade_data:GradeData, all_rows: GradeData):
+def save_grade_data(old_grade_data:GradeData, all_rows: GradeData) -> str:
     """
     saves the new grade data
     and returns the notification message
@@ -288,3 +254,27 @@ def save_gd_to_file(all_rows: GradeData, old_grade_data: GradeData) -> None:
         json.dump(old_grade_data,f,indent=4)
     with open("gradeData.json","w") as f:
         json.dump(all_rows,f,indent=4)
+
+async def check_workday(do_head: bool) -> None:
+    """
+    main function
+    """
+    async with async_playwright() as playwright:        
+        browser = await get_browser(do_head,playwright)
+        page, context = await load_cookies(browser, playwright)
+
+        state = await initialize_workday(page, context, browser)
+        # if state == State.BAD_LOAD:
+        #     await bad_page_loading(page)
+        
+        await load_grade_page(page)
+        all_rows = await scrape_table(page)
+
+        with open("gradeData.json","r") as f:
+            old_grade_data = json.load(f)
+
+        nf_msg = save_grade_data(old_grade_data, all_rows)
+        await end(browser, context)
+
+        return nf_msg
+
