@@ -5,5 +5,5 @@ with open("constants.json","r") as f:
 
 WD_USER = constants.get("Workday-Username")
 WD_PW = constants.get("Workday-Password")
-API_KEY = constants.get("Pushbullet-API-Key")
+API_KEY = constants.get("Pushbullet API Key")
 SESSION_NAME = constants.get("SessionName")

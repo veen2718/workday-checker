@@ -68,15 +68,15 @@ def time_fmt(t: str) -> str:
     """
     return datetime.fromisoformat(t).strftime("%H:%M %m-%d")
 
-def last(n=5):
+def last(n=10):
     with open("logs.json","r") as f:
         logs = json.load(f)
 
     logsRecent = logs[:n]
     logsOld = logs[n:]
 
-    logsRecentNone = [l for l in logsRecent if l.get("message") == "no new changes"]
-    logsOldChanges = [l for l in logsOld if l.get("message") != "no new changes"]
+    logsRecentNone = [l for l in logsRecent if l.get("message") == "no new grades"]
+    logsOldChanges = [l for l in logsOld if l.get("message") != "no new grades"]
 
     
     if logsRecent != logsRecentNone:
@@ -96,10 +96,10 @@ def display_last_with_changes(n: int = 5) -> None:
     logsRecent = logs[:n]
     logsOld = logs[n:]
 
-    logsRecentNone = [l for l in logsRecent if l.get("message") == "no new changes"]
-    logsOldChanges = [l for l in logsOld if l.get("message") != "no new changes"]
+    logsRecentNone = [l for l in logsRecent if l.get("message") == "no new grades"]
+    logsOldChanges = [l for l in logsOld if l.get("message") != "no new grades"]
 
-    logsRecentChanges =[l for l in logsRecent if l.get("message") != "no new changes"]
+    logsRecentChanges =[l for l in logsRecent if l.get("message") != "no new grades"]
 
     print("RECENT CHANGE")
     display_logs(logsRecentChanges)
@@ -122,7 +122,7 @@ def display_last_with_no_changes(n: int = 5) -> None:
     logsRecentNone = logs[:n]
     logsOld = logs[n:]
 
-    logsOldChanges = [l for l in logsOld if l.get("message") != "no new changes"]
+    logsOldChanges = [l for l in logsOld if l.get("message") != "no new grades"]
 
     print("last checks")
     display_logs(logsRecentNone)

@@ -245,6 +245,7 @@ def save_grade_data(old_grade_data:GradeData, all_rows: GradeData) -> str:
     else:
         save_gd_to_file(all_rows, old_grade_data)
         print("Data has now been saved; Now the next time the script is run, it can check the new data against the previous data for changes")
+    return nf_msg
 
 
 def save_gd_to_file(all_rows: GradeData, old_grade_data: GradeData) -> None:

@@ -18,8 +18,8 @@ if __name__ == "__main__":
         elif command == "clear":
             clear_cookies()
             quit()
-        if doHead:
-            quit()
+        # if doHead:
+        #     quit()
     nfMsg = asyncio.run(
         check_workday(doHead)
         )
@@ -27,6 +27,6 @@ if __name__ == "__main__":
         sendNotification(*nfMsg)
         log(nfMsg)
     else:
-        log("no new changes")
+        log("no new grades")
         
 

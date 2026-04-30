@@ -1,10 +1,12 @@
 import json
+import os
 
 # creating json files to store site data and grade data
 
-for file in ["gradeData.json","logs.json","constants.json"]:
-    with open(file,"w") as f:
-        json.dump([],f)
+for file in ["gradeData.json","logs.json","constants.json","state.json"]:
+    if file not in os.listdir():
+        with open(file,"w") as f:
+            json.dump([],f)
 
 
 with open("constants.json","w") as f:
