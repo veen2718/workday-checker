@@ -4,7 +4,9 @@ This is a program designed to check your workday grades for you. Only been teste
 ## Instructions
 
 #### Download
-Download the code [here](https://github.com/veen2718/workday-checker/archive/refs/heads/main.zip)
+```
+git clone https://github.com/veen2718/workday-checker
+```
 
 #### Setup
 
